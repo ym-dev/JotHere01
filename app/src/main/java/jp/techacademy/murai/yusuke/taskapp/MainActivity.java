@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 Task task = (Task) parent.getAdapter().getItem(position);
 
                 Intent intent = new Intent(MainActivity.this, InputActivity.class);
-                intent.putExtra(EXTRA_TASK, task.getId());
-
+//                intent.putExtra(EXTRA_TASK, task.getId());
+                intent.putExtra(EXTRA_TASK, task);
                 startActivity(intent);
             }
         });
@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+/*        if (mTaskRealmResults.size() == 0) {
+            // アプリ起動時にタスクの数が0であった場合は表示テスト用のタスクを作成する
+            addTaskForTest();
+        }*/
 
         reloadListView();
     }

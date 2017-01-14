@@ -26,7 +26,6 @@ import io.realm.Sort;
 public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_TASK = "jp.techacademy.murai.yusuke.taskapp.TASK";
 
-
     private Realm mRealm;
     private RealmResults<Task> mTaskRealmResults;
     private RealmChangeListener mRealmListener = new RealmChangeListener() {
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             reloadListView();
         }
     };
-
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
 
@@ -43,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,12 +51,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Realmの設定
+        // Realmの設定
         mRealm = Realm.getDefaultInstance();
         mTaskRealmResults = mRealm.where(Task.class).findAll();
         mTaskRealmResults.sort("date", Sort.DESCENDING);
         mRealm.addChangeListener(mRealmListener);
-
 
         // ListViewの設定
         mTaskAdapter = new TaskAdapter(MainActivity.this);
@@ -71,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 入力・編集する画面に遷移させる
                 Task task = (Task) parent.getAdapter().getItem(position);
+
                 Intent intent = new Intent(MainActivity.this, InputActivity.class);
-                intent.putExtra(EXTRA_TASK, task);
+                intent.putExtra(EXTRA_TASK, task.getId());
+
                 startActivity(intent);
             }
         });
@@ -83,12 +81,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // タスクを削除する
+
                 final Task task = (Task) parent.getAdapter().getItem(position);
+
                 // ダイアログを表示する
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
                 builder.setTitle("削除");
-                builder.setMessage(task.getTitle() + "を削除しますか？");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                builder.setMessage(task.getTitle() + "を削除しますか");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         RealmResults<Task> results = mRealm.where(Task.class).equalTo("id", task.getId()).findAll();
@@ -105,26 +107,18 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
-
                 return true;
             }
         });
 
-/*        if (mTaskRealmResults.size() == 0) {
-            // アプリ起動時にタスクの数が0であった場合は表示テスト用のタスクを作成する
-            addTaskForTest();
-        }*/
-
         reloadListView();
     }
 
-
     private void reloadListView() {
+
         ArrayList<Task> taskArrayList = new ArrayList<>();
 
         for (int i = 0; i < mTaskRealmResults.size(); i++) {
-            if (!mTaskRealmResults.get(i).isValid()) continue;
-
             Task task = new Task();
 
             task.setId(mTaskRealmResults.get(i).getId());
@@ -138,9 +132,7 @@ public class MainActivity extends AppCompatActivity {
         mTaskAdapter.setTaskArrayList(taskArrayList);
         mListView.setAdapter(mTaskAdapter);
         mTaskAdapter.notifyDataSetChanged();
-
     }
-
 
     @Override
     protected void onDestroy() {
@@ -148,8 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRealm.close();
     }
-
-
+/*
     private void addTaskForTest() {
         Task task = new Task();
         task.setTitle("作業");
@@ -159,5 +150,6 @@ public class MainActivity extends AppCompatActivity {
         mRealm.beginTransaction();
         mRealm.copyToRealmOrUpdate(task);
         mRealm.commitTransaction();
-    }
+    }*/
 }
+

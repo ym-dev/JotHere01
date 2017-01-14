@@ -90,8 +90,12 @@ public class InputActivity extends AppCompatActivity {
         mTitleEdit = (EditText)findViewById(R.id.title_edit_text);
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
 
+        // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();
-        mTask = (Task) intent.getSerializableExtra(MainActivity.EXTRA_TASK);
+        int taskId = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);
+        Realm realm = Realm.getDefaultInstance();
+        mTask = realm.where(Task.class).equalTo("id", taskId).findFirst();
+        realm.close();
 
         if (mTask == null) {
             // 新規作成の場合

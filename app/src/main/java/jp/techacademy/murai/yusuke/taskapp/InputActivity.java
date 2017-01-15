@@ -131,6 +131,8 @@ public class InputActivity extends AppCompatActivity {
     private void addTask() {
         Realm realm = Realm.getDefaultInstance();
 
+        realm.beginTransaction();     //161行目からここに移動"Changing Realm data can only be done from inside a transaction."を回避
+
         if (mTask == null) {
             // 新規作成の場合
             mTask = new Task();
@@ -149,13 +151,14 @@ public class InputActivity extends AppCompatActivity {
         String title = mTitleEdit.getText().toString();
         String content = mContentEdit.getText().toString();
 
+
         mTask.setTitle(title);
         mTask.setContents(content);
         GregorianCalendar calendar = new GregorianCalendar(mYear,mMonth,mDay,mHour,mMinute);
         Date date = calendar.getTime();
         mTask.setDate(date);
 
-        realm.beginTransaction();
+//        realm.beginTransaction();
         realm.copyToRealmOrUpdate(mTask);
         realm.commitTransaction();
 

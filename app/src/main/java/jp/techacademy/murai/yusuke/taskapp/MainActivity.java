@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 Task task = (Task) parent.getAdapter().getItem(position);
 
                 Intent intent = new Intent(MainActivity.this, InputActivity.class);
-//                intent.putExtra(EXTRA_TASK, task.getId());
-                intent.putExtra(EXTRA_TASK, task);
+                intent.putExtra(EXTRA_TASK, task.getId());
+//                intent.putExtra(EXTRA_TASK, task);
                 startActivity(intent);
             }
         });

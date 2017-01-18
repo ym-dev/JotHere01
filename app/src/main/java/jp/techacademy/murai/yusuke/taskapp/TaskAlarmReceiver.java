@@ -11,7 +11,6 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import io.realm.Realm;
-
 /**
  * Created by my99workmac on 2017/01/15.
  */

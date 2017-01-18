@@ -53,11 +53,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+/*
         // Realmの設定
         mRealm = Realm.getDefaultInstance();
         mTaskRealmResults = mRealm.where(Task.class).findAll();
         mTaskRealmResults.sort("date", Sort.DESCENDING);
         mRealm.addChangeListener(mRealmListener);
+*/
+        // Realmの設定(categoryを絞って)
+        String cname = "cat1";
+        mRealm = Realm.getDefaultInstance();
+        mTaskRealmResults = mRealm.where(Task.class).equalTo("category", cname).findAll();
+        mTaskRealmResults.sort("date", Sort.DESCENDING);
+        mRealm.addChangeListener(mRealmListener);
+
+
+
 
         // ListViewの設定
         mTaskAdapter = new TaskAdapter(MainActivity.this);

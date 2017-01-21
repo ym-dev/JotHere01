@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
+    private Button playButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +55,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-/*
         // Realmの設定
         mRealm = Realm.getDefaultInstance();
         mTaskRealmResults = mRealm.where(Task.class).findAll();
         mTaskRealmResults.sort("date", Sort.DESCENDING);
         mRealm.addChangeListener(mRealmListener);
-*/
-        // Realmの設定(categoryを絞って)
+/*        // Realmの設定(categoryを絞って)
         String cname = "cat1";
         mRealm = Realm.getDefaultInstance();
         mTaskRealmResults = mRealm.where(Task.class).equalTo("category", cname).findAll();
         mTaskRealmResults.sort("date", Sort.DESCENDING);
-        mRealm.addChangeListener(mRealmListener);
+        mRealm.addChangeListener(mRealmListener);*/
 
 
 

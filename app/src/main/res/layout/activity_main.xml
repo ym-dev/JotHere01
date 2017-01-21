@@ -8,18 +8,48 @@
     android:fitsSystemWindows="true"
     tools:context="jp.techacademy.murai.yusuke.taskapp.MainActivity">
 
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/plus"
         app:backgroundTint="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="403dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48">
+
+            <EditText
+                android:layout_width="315dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/editText"
+                android:hint="カテゴリを入力" />
+
+            <Button
+                android:text="絞込み"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="542dp" />
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,11 +10,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public final static String EXTRA_TASK = "jp.techacademy.murai.yusuke.taskapp.TASK";
 
     private Realm mRealm;
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     };
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
-    private Button playButton;
+    private Button filterButton;
+    private EditText categoryEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +64,13 @@ public class MainActivity extends AppCompatActivity {
         mTaskRealmResults = mRealm.where(Task.class).findAll();
         mTaskRealmResults.sort("date", Sort.DESCENDING);
         mRealm.addChangeListener(mRealmListener);
-/*        // Realmの設定(categoryを絞って)
-        String cname = "cat1";
-        mRealm = Realm.getDefaultInstance();
-        mTaskRealmResults = mRealm.where(Task.class).equalTo("category", cname).findAll();
-        mTaskRealmResults.sort("date", Sort.DESCENDING);
-        mRealm.addChangeListener(mRealmListener);*/
 
 
+
+        //Button
+        filterButton = (Button) findViewById(R.id.button);
+        filterButton.setOnClickListener(this);
+        filterButton.setTag(0);        //Tag0が絞込み実行ボタン
 
 
         // ListViewの設定
@@ -179,5 +182,50 @@ public class MainActivity extends AppCompatActivity {
         mRealm.copyToRealmOrUpdate(task);
         mRealm.commitTransaction();
     }*/
+
+
+    @Override
+    public void onClick(View v) {
+        Log.d("TaskApp", "Buttonが押されました。Tag="+ String.valueOf(filterButton.getTag()));
+
+        categoryEditText = (EditText) findViewById(R.id.filterEditText);
+        SpannableStringBuilder sp = (SpannableStringBuilder)categoryEditText.getText();
+        String inputCategory = sp.toString();
+        Log.d("TaskApp", "categoryTextの中身。"+ inputCategory);
+
+        int buttonTag = (Integer) filterButton.getTag();
+        Log.d("TaskApp", "buttontag = "+ buttonTag);
+
+        if (buttonTag == 0){
+            Log.d("TaskApp", "絞込み選択時の処理"+ buttonTag);
+            // Realmの設定(categoryを絞って)
+            mRealm = Realm.getDefaultInstance();
+            mTaskRealmResults = mRealm.where(Task.class).equalTo("category", inputCategory).findAll();
+            mTaskRealmResults.sort("date", Sort.DESCENDING);
+            mRealm.addChangeListener(mRealmListener);
+            reloadListView();
+
+            filterButton.setTag(1);
+            filterButton.setText("全表示");
+
+        }else if(buttonTag == 1){
+            Log.d("TaskApp", "全表示選択時の処理"+ inputCategory);
+            // Realmの設定
+            mRealm = Realm.getDefaultInstance();
+            mTaskRealmResults = mRealm.where(Task.class).findAll();
+            mTaskRealmResults.sort("date", Sort.DESCENDING);
+            mRealm.addChangeListener(mRealmListener);
+            reloadListView();
+
+            filterButton.setTag(0);
+            filterButton.setText("絞込み");
+
+        }
+
+
+
+
+
+    }
 }
 

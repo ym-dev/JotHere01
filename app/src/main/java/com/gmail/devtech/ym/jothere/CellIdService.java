@@ -68,13 +68,23 @@ public class CellIdService extends Service {
             }
             Log.d(TAG, str);
 
-//                sendNotification();
+                sendNotification();
         }
     };
 
-    private void sendNotification() {
+
+    private void sendNotification(){
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.putExtra(
+                "message", "CID:"+cellId);
+        broadcastIntent.setAction("MY_ACTION");
+        getBaseContext().sendBroadcast(broadcastIntent);
+
+
+    }
+/*    private void sendNotification() {
         Log.d(TAG, "sendNotification()");
-/*
+
 
         String string = "";
         //Intent intent = new Intent();       //引数なしのIntentを作成。通知をタップしても何もしない。
@@ -120,9 +130,9 @@ public class CellIdService extends Service {
 
 
         manager.notify(0, builder.build());
-*/
-    }
 
+    }
+*/
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.

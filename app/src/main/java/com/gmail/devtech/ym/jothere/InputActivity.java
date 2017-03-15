@@ -5,10 +5,17 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.CellLocation;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.telephony.cdma.CdmaCellLocation;
+import android.telephony.gsm.GsmCellLocation;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -22,12 +29,18 @@ import java.util.GregorianCalendar;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import android.telephony.PhoneStateListener;
+
 public class InputActivity extends AppCompatActivity {
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Button mDateButton, mTimeButton;
     private EditText mTitleEdit, mContentEdit, mCategoryEdit;
     private Task mTask;
+    private String strCellId;
+
+
+
     private View.OnClickListener mOnDateClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -93,6 +106,12 @@ public class InputActivity extends AppCompatActivity {
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
 
+
+        //Cell IDの取得
+        TelephonyManager telManager=(TelephonyManager)
+                getSystemService(Context.TELEPHONY_SERVICE);
+        telManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION);
+
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();
         int taskId = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);
@@ -130,6 +149,67 @@ public class InputActivity extends AppCompatActivity {
         }
     }
 
+    //電話情報を受信するためのリスナー
+    public PhoneStateListener phoneStateListener=new PhoneStateListener() {
+        /*//電話コール状態の変化時に呼ばれる
+        @Override
+        public void onCallStateChanged(int state, String number) {
+            String str="電話コール状態:";
+            if (state==TelephonyManager.CALL_STATE_RINGING) str+="電話着信";
+            if (state==TelephonyManager.CALL_STATE_OFFHOOK) str+="通話開始";
+            if (state==TelephonyManager.CALL_STATE_IDLE)    str+="電話終了";
+            str+=" "+number;
+            textView.setText(textView.getText()+"\n"+str);
+        }
+
+        //サービス状態の変化時に呼ばれる
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            String str="サービス状態:";
+            int state=serviceState.getState();
+            if (state==ServiceState.STATE_EMERGENCY_ONLY) str+="エマージェンシーのみ";
+            if (state==ServiceState.STATE_IN_SERVICE)     str+="サービス内";
+            if (state==ServiceState.STATE_OUT_OF_SERVICE) str+="サービス外";
+            if (state==ServiceState.STATE_POWER_OFF)      str+="電源オフ";
+            textView.setText(textView.getText()+"\n"+str);
+            super.onServiceStateChanged(serviceState);
+        }
+
+        //通信強度の変化時に呼ばれる
+        @Override
+        public void onSignalStrengthChanged(int asu) {
+            String str="通信強度:"+String.valueOf(-113+2*asu)+"dBm";
+            textView.setText(textView.getText()+"\n"+str);
+        }
+*/
+        //基地局の変化時に呼ばれる
+        @Override
+        public void onCellLocationChanged(CellLocation location) {
+            String str="";
+            //GSMの基地局情報
+            if (location instanceof GsmCellLocation) {
+                GsmCellLocation loc=(GsmCellLocation)location;
+                Integer cellId = loc.getCid();
+                strCellId = cellId.toString();
+                Log.d("jothere", strCellId);
+//                str+="CID:"+loc.getCid()+"\n";
+//                str+="LAC:"+loc.getLac()+"\n";
+                mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
+                mCategoryEdit.setText(strCellId);
+            }/*
+            //CDMAの基地局情報
+            else if(location instanceof CdmaCellLocation) {
+                CdmaCellLocation loc=(CdmaCellLocation)location;
+                str+="BaseStationId:"+loc.getBaseStationId()+"\n";
+                str+="BaseStationLatitude:"+loc.getBaseStationLatitude()+"\n";
+                str+="BaseStationLongitude:"+loc.getBaseStationLongitude()+"\n";
+                str+="NetworkId:"+loc.getNetworkId()+"\n";
+                str+="SystemId:"+loc.getSystemId()+"\n";
+            }*/
+        }
+    };
+
+
     private void addTask() {
         Realm realm = Realm.getDefaultInstance();
 
@@ -152,12 +232,12 @@ public class InputActivity extends AppCompatActivity {
 
         String title = mTitleEdit.getText().toString();
         String content = mContentEdit.getText().toString();
-        String category = mCategoryEdit.getText().toString();
+//        String category = mCategoryEdit.getText().toString();
 
 
         mTask.setTitle(title);
         mTask.setContents(content);
-        mTask.setCategory(category);
+        mTask.setCategory(strCellId);
         GregorianCalendar calendar = new GregorianCalendar(mYear,mMonth,mDay,mHour,mMinute);
         Date date = calendar.getTime();
         mTask.setDate(date);

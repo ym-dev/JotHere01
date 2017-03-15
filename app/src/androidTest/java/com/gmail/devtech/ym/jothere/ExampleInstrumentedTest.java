@@ -1,4 +1,4 @@
-package jp.techacademy.murai.yusuke.taskapp;
+package com.gmail.devtech.ym.jothere;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

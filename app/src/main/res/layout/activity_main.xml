@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="jp.techacademy.murai.yusuke.taskapp.MainActivity">
+    tools:context="com.gmail.devtech.ym.jothere.MainActivity">
 
 
     <android.support.design.widget.FloatingActionButton
@@ -19,36 +19,35 @@
         app:backgroundTint="@color/colorPrimary"/>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="403dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.48">
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="0.48"
+            android:orientation="horizontal">
 
             <EditText
-                android:layout_width="315dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
                 android:id="@+id/filterEditText"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:ems="10"
                 android:hint="カテゴリを入力" />
 
             <Button
-                android:text="絞込み"
+                android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button"
-                android:layout_weight="1" />
+                android:text="絞込み" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/listView1"
             android:layout_width="match_parent"
-            android:layout_height="542dp" />
+            android:layout_height="457dp" />
 
     </LinearLayout>
 

@@ -1,10 +1,13 @@
 package com.gmail.devtech.ym.jothere;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
@@ -15,11 +18,13 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CellIdService extends Service {
     public static final String TAG = "JotHereLog";
-    private Integer cellId;
+    public Integer cellId;
 
 
     public TelephonyManager TM;
@@ -68,11 +73,11 @@ public class CellIdService extends Service {
             }
             Log.d(TAG, str);
 
-                sendNotification();
+                sendNotification(cellId);
         }
     };
 
-
+/*
     private void sendNotification(){
         Intent broadcastIntent = new Intent();
         broadcastIntent.putExtra(
@@ -82,7 +87,46 @@ public class CellIdService extends Service {
 
 
     }
-/*    private void sendNotification() {
+
+    */
+
+    private void sendNotification(Integer cellid) {
+        Log.d(TAG, "sendNotification() cellid="+cellid);
+
+        String string = "";
+        //Intent intent = new Intent();       //引数なしのIntentを作成。通知をタップしても何もしない。
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Date now = new Date(System.currentTimeMillis());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.JAPANESE);
+        String nowText = formatter.format(now);
+        Notification notification;
+
+        string = cellid.toString();
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        builder.setAutoCancel(true);
+        builder.setContentTitle("SAMP!");
+        builder.setContentText(string);
+        builder.setSubText(nowText);
+        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+//        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentIntent(pendingIntent);
+        //builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        builder.setAutoCancel(false);
+        notification = builder.build();
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+
+
+        manager.notify(0, builder.build());
+    }
+/*
+
+
+    private void sendNotification() {
         Log.d(TAG, "sendNotification()");
 
 

@@ -1,6 +1,7 @@
 package com.gmail.devtech.ym.jothere;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import io.realm.Realm;
@@ -37,6 +39,9 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    public static final String TAG = "JotHereLog";
+
     public final static String EXTRA_TASK = "jp.techacademy.murai.yusuke.taskapp.TASK";
 
     private Realm mRealm;
@@ -79,13 +84,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
             }
         }
+/*
 
         //電話情報の許諾
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_REQUEST_PHONE_STATE);
+
             }
         }
+*/
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -181,8 +189,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }*/
 
         reloadListView();
-        startMyService();
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //サービスの起動
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+
+                // サービスが実行中かチェック
+                ActivityManager am = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
+                List<ActivityManager.RunningServiceInfo> listServiceInfo = am.getRunningServices(Integer.MAX_VALUE);
+                boolean found = false;
+                for (ActivityManager.RunningServiceInfo curr : listServiceInfo) {
+                    // クラス名を比較
+                    if (curr.service.getClassName().equals(CellIdService.class.getName())) {
+                        // 実行中のサービスと一致
+                        Log.d(TAG, "サービス実行中");
+                        found = true;
+                        break;
+                    }
+                }
+                if (found == false) {
+                    Log.d(TAG, "サービス未実行のため、Service起動");
+                    startMyService();
+                }
+            }
+        }
+
+
+    }
+
+
 
     private void reloadListView() {
 

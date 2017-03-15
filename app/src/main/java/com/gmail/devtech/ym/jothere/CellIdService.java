@@ -56,7 +56,7 @@ public class CellIdService extends Service {
                 str += "CID:" + loc.getCid() + "\n";
 
 //                str += "LAC:" + loc.getLac() + "\n";
-//            }
+            }
             //CDMAの基地局情報
             else if (location instanceof CdmaCellLocation) {
                 CdmaCellLocation loc = (CdmaCellLocation) location;
@@ -66,7 +66,7 @@ public class CellIdService extends Service {
                 str += "NetworkId:" + loc.getNetworkId() + "\n";
                 str += "SystemId:" + loc.getSystemId() + "\n";
             }
-            Log.d(TAG, "CID= "+ str);
+            Log.d(TAG, str);
 
 //                sendNotification();
         }

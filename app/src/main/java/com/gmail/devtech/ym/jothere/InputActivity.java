@@ -106,11 +106,18 @@ public class InputActivity extends AppCompatActivity {
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
 
-
         //Cell IDの取得
-        TelephonyManager telManager=(TelephonyManager)
-                getSystemService(Context.TELEPHONY_SERVICE);
-        telManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION);
+        TelephonyManager TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        PhoneStateListener PSL = new PhoneStateListener();
+        int event = PSL.LISTEN_CELL_INFO | PSL.LISTEN_CELL_LOCATION;
+        TM.listen(PSL, event);
+        GsmCellLocation gsmCellLocation = (GsmCellLocation)TM.getCellLocation();
+//        Integer cid = gsmCellLocation.getCid() & 0xffff;  //cell id
+        Integer cid = gsmCellLocation.getCid();  //cell id
+        strCellId = cid.toString();
+        mCategoryEdit.setText(strCellId);       //Cell Idをcategory行に記載
+        Log.d("jothere", "strCellID= "+strCellId);
+
 
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();
@@ -149,39 +156,11 @@ public class InputActivity extends AppCompatActivity {
         }
     }
 
+/*
+
     //電話情報を受信するためのリスナー
     public PhoneStateListener phoneStateListener=new PhoneStateListener() {
-        /*//電話コール状態の変化時に呼ばれる
-        @Override
-        public void onCallStateChanged(int state, String number) {
-            String str="電話コール状態:";
-            if (state==TelephonyManager.CALL_STATE_RINGING) str+="電話着信";
-            if (state==TelephonyManager.CALL_STATE_OFFHOOK) str+="通話開始";
-            if (state==TelephonyManager.CALL_STATE_IDLE)    str+="電話終了";
-            str+=" "+number;
-            textView.setText(textView.getText()+"\n"+str);
-        }
 
-        //サービス状態の変化時に呼ばれる
-        @Override
-        public void onServiceStateChanged(ServiceState serviceState) {
-            String str="サービス状態:";
-            int state=serviceState.getState();
-            if (state==ServiceState.STATE_EMERGENCY_ONLY) str+="エマージェンシーのみ";
-            if (state==ServiceState.STATE_IN_SERVICE)     str+="サービス内";
-            if (state==ServiceState.STATE_OUT_OF_SERVICE) str+="サービス外";
-            if (state==ServiceState.STATE_POWER_OFF)      str+="電源オフ";
-            textView.setText(textView.getText()+"\n"+str);
-            super.onServiceStateChanged(serviceState);
-        }
-
-        //通信強度の変化時に呼ばれる
-        @Override
-        public void onSignalStrengthChanged(int asu) {
-            String str="通信強度:"+String.valueOf(-113+2*asu)+"dBm";
-            textView.setText(textView.getText()+"\n"+str);
-        }
-*/
         //基地局の変化時に呼ばれる
         @Override
         public void onCellLocationChanged(CellLocation location) {
@@ -196,7 +175,7 @@ public class InputActivity extends AppCompatActivity {
 //                str+="LAC:"+loc.getLac()+"\n";
                 mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
                 mCategoryEdit.setText(strCellId);
-            }/*
+            }
             //CDMAの基地局情報
             else if(location instanceof CdmaCellLocation) {
                 CdmaCellLocation loc=(CdmaCellLocation)location;
@@ -205,9 +184,11 @@ public class InputActivity extends AppCompatActivity {
                 str+="BaseStationLongitude:"+loc.getBaseStationLongitude()+"\n";
                 str+="NetworkId:"+loc.getNetworkId()+"\n";
                 str+="SystemId:"+loc.getSystemId()+"\n";
-            }*/
+            }
         }
+
     };
+*/
 
 
     private void addTask() {

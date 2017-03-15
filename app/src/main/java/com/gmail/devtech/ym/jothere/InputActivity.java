@@ -38,6 +38,9 @@ public class InputActivity extends AppCompatActivity {
     private EditText mTitleEdit, mContentEdit, mCategoryEdit;
     private Task mTask;
     private String strCellId;
+    public TelephonyManager TM;
+    private PhoneStateListener PSL;
+    private int event;
 
 
 
@@ -107,8 +110,8 @@ public class InputActivity extends AppCompatActivity {
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
 
         //Cell IDの取得
-        TelephonyManager TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        PhoneStateListener PSL = new PhoneStateListener();
+        TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        PSL = new PhoneStateListener();
         int event = PSL.LISTEN_CELL_INFO | PSL.LISTEN_CELL_LOCATION;
         TM.listen(PSL, event);
         GsmCellLocation gsmCellLocation = (GsmCellLocation)TM.getCellLocation();
@@ -154,7 +157,12 @@ public class InputActivity extends AppCompatActivity {
             mDateButton.setText(dateString);
             mTimeButton.setText(timeString);
         }
+
+
+
     }
+
+
 
 /*
 

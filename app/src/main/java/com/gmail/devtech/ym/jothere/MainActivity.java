@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }*/
 
         reloadListView();
+        startMyService();
     }
 
     private void reloadListView() {
@@ -263,6 +264,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+    }
+
+
+    private void startMyService() {
+
+        Intent intent = new Intent(this, CellIdService.class);
+        startService(intent);
 
     }
 }

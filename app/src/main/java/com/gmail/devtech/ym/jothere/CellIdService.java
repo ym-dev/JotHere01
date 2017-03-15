@@ -68,7 +68,7 @@ public class CellIdService extends Service {
             }
             Log.d(TAG, "CID= "+ str);
 
-                sendNotification();
+//                sendNotification();
         }
     };
 

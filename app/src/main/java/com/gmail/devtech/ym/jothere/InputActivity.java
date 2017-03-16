@@ -109,18 +109,25 @@ public class InputActivity extends AppCompatActivity {
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
 
+
         //Cell IDの取得
         TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         PSL = new PhoneStateListener();
         int event = PSL.LISTEN_CELL_INFO | PSL.LISTEN_CELL_LOCATION;
         TM.listen(PSL, event);
         GsmCellLocation gsmCellLocation = (GsmCellLocation)TM.getCellLocation();
-//        Integer cid = gsmCellLocation.getCid() & 0xffff;  //cell id
-        Integer cid = gsmCellLocation.getCid();  //cell id
-        strCellId = cid.toString();
-        mCategoryEdit.setText(strCellId);       //Cell Idをcategory行に記載
-        Log.d("jothere", "strCellID= "+strCellId);
 
+        if (gsmCellLocation != null) {
+//        Integer cid = gsmCellLocation.getCid() & 0xffff;  //cell id
+            Integer cid = gsmCellLocation.getCid();  //cell id
+            strCellId = cid.toString();
+            mCategoryEdit.setText(strCellId);       //Cell Idをcategory行に記載
+
+            Log.d("jothere", "strCellID= " + strCellId);
+        }else{
+            String cidobterr = (String) getText(R.string.cidobterr);
+            mCategoryEdit.setText(cidobterr);       //Cell Idをcategory行に記載
+        }
 
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();

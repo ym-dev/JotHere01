@@ -60,7 +60,6 @@ public class CellIdService extends Service {
     }
 
     //Cell IDを受信するためのリスナー
-    //電話情報を受信するためのリスナー
     public PhoneStateListener phoneStateListener=new PhoneStateListener() {
 
         //基地局の変化時に呼ばれる
@@ -94,6 +93,8 @@ public class CellIdService extends Service {
         }
     };
 
+
+    //PhoneStateListenerで取得したCellIDとRealmに保存しているTaskのCellIDを比較
     private void cellIdMatching(Integer cellId) {
         Log.d(TAG, "cellIdMatching() cellid="+cellId);
 
@@ -104,14 +105,24 @@ public class CellIdService extends Service {
         for (int i = 0; i < cidRealmResults.size(); i++) {
             if (!cidRealmResults.get(i).isValid()) continue;
             String taskCid = cidRealmResults.get(i).getCategory();
+            int intTaskCid = Integer.parseInt(taskCid);
             Log.d(TAG, "i= "+i+" taskCid="+taskCid);
+
+
+            if(intTaskCid == cellId){
+                Log.d(TAG, "i="+i+"cellId Match!");
+                sendNotification(cellId, i);
+            }else{
+                Log.d(TAG, "i="+i+"cellId UnMatch");
+            }
+            
+
         }
 
         realm.close();
 
 
 
-        sendNotification(cellId);
     }
 
 /*
@@ -127,7 +138,7 @@ public class CellIdService extends Service {
 
     */
 
-    private void sendNotification(Integer cellid) {
+    private void sendNotification(Integer cellid, int number) {
         Log.d(TAG, "sendNotification() cellid="+cellid);
 
         String string = "";
@@ -147,12 +158,12 @@ public class CellIdService extends Service {
 
         builder.setAutoCancel(true);
         builder.setContentTitle("Cell ID Changed!");
-        builder.setContentText("CID="+string);
+        builder.setContentText("i= "+number+" CID="+string);
 //        builder.setSubText(nowText);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentIntent(pendingIntent);
-        //builder.setDefaults(Notification.DEFAULT_VIBRATE);
+//        builder.setDefaults(Notification.DEFAULT_VIBRATE);
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setAutoCancel(false);
         notification = builder.build();
@@ -160,7 +171,7 @@ public class CellIdService extends Service {
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 
-        manager.notify(0, builder.build());
+        manager.notify(number, builder.build());
     }
 
     @Override

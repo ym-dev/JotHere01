@@ -15,6 +15,7 @@ public class Task extends RealmObject implements Serializable {
     private String contents; // 内容
     private Date date; // 日時
     private String category; //カテゴリー
+//    private String category; //カテゴリー
 
     // id をプライマリーキーとして設定
     @PrimaryKey

@@ -202,12 +202,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d(TAG, "OSVersionがM以上");
             if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                startMyService();
-            } else {
-                Log.d(TAG, "OSVersionがM未満");
+                Log.d(TAG, "パーミッションあり");
                 startMyService();
             }
+        }else {
+            Log.d(TAG, "OSVersionがM未満");
+            startMyService();
         }
     }
 

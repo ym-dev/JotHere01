@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JotHere01.iml" filepath="$PROJECT_DIR$/JotHere01.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JotHere01.iml" filepath="$PROJECT_DIR$/JotHere01.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TaskApp.iml" filepath="$PROJECT_DIR$/TaskApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

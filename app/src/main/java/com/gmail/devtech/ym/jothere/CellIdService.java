@@ -123,6 +123,7 @@ public class CellIdService extends Service {
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentIntent(pendingIntent);
         //builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setAutoCancel(false);
         notification = builder.build();
 

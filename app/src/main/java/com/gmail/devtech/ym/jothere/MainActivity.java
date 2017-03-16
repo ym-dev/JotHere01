@@ -200,17 +200,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         //バージョン(パーミッション)を確認してサービスの起動
 
-
+        //位置情報の許諾をみてサービスをスタート
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.d(TAG, "OSVersionがM以上");
-            if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "パーミッションあり");
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "パーミッションありますよ");
                 startMyService();
             }
-        }else {
+        }else{
             Log.d(TAG, "OSVersionがM未満");
             startMyService();
         }
+
     }
 
 

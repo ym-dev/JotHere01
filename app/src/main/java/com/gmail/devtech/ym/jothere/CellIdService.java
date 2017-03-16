@@ -22,10 +22,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class CellIdService extends Service {
     public static final String TAG = "JotHereLog";
     public Integer cellId;
     public TelephonyManager TM;
+    private Task mTaskService;
 
     public CellIdService() {
 
@@ -84,9 +88,31 @@ public class CellIdService extends Service {
             }
             Log.d(TAG, str);
 
-            sendNotification(cellId);
+//            sendNotification(cellId);
+            cellIdMatching(cellId);
+            
         }
     };
+
+    private void cellIdMatching(Integer cellId) {
+        Log.d(TAG, "cellIdMatching() cellid="+cellId);
+
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Task> cidRealmResults = realm.where(Task.class).findAll();
+        Log.d(TAG, "cidRealmResults.size="+cidRealmResults.size());
+
+        for (int i = 0; i < cidRealmResults.size(); i++) {
+            if (!cidRealmResults.get(i).isValid()) continue;
+            String taskCid = cidRealmResults.get(i).getCategory();
+            Log.d(TAG, "i= "+i+" taskCid="+taskCid);
+        }
+
+        realm.close();
+
+
+
+        sendNotification(cellId);
+    }
 
 /*
     private void sendNotification(){

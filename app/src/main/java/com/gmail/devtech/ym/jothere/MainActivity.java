@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final String TAG = "JotHereLog";
 
-    public final static String EXTRA_TASK = "jp.techacademy.murai.yusuke.taskapp.TASK";
+
+    public final static String EXTRA_TASK = "com.gmail.devtech.ym.jothere.TASK";
 
     private Realm mRealm;
     private RealmResults<Task> mTaskRealmResults;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "MainActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -194,32 +196,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "MainActivity onResume");
         super.onResume();
-        //サービスの起動
+        //バージョン(パーミッション)を確認してサービスの起動
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-
-                // サービスが実行中かチェック
-                ActivityManager am = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
-                List<ActivityManager.RunningServiceInfo> listServiceInfo = am.getRunningServices(Integer.MAX_VALUE);
-                boolean found = false;
-                for (ActivityManager.RunningServiceInfo curr : listServiceInfo) {
-                    // クラス名を比較
-                    if (curr.service.getClassName().equals(CellIdService.class.getName())) {
-                        // 実行中のサービスと一致
-                        Log.d(TAG, "サービス実行中");
-                        found = true;
-                        break;
-                    }
-                }
-                if (found == false) {
-                    Log.d(TAG, "サービス未実行のため、Service起動");
-                    startMyService();
-                }
+                startMyService();
+            } else {
+                Log.d(TAG, "OSVersionがM未満");
+                startMyService();
             }
         }
-
-
     }
 
 
@@ -250,17 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mRealm.close();
     }
-/*
-    private void addTaskForTest() {
-        Task task = new Task();
-        task.setTitle("作業");
-        task.setContents("プログラムを書いてPUSHする");
-        task.setDate(new Date());
-        task.setId(0);
-        mRealm.beginTransaction();
-        mRealm.copyToRealmOrUpdate(task);
-        mRealm.commitTransaction();
-    }*/
 
 
     @Override
@@ -310,8 +288,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startMyService() {
 
-        Intent intent = new Intent(this, CellIdService.class);
-        startService(intent);
+        // サービスが実行中かチェック
+        ActivityManager am = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> listServiceInfo = am.getRunningServices(Integer.MAX_VALUE);
+        boolean found = false;
+        for (ActivityManager.RunningServiceInfo curr : listServiceInfo) {
+            // クラス名を比較
+            if (curr.service.getClassName().equals(CellIdService.class.getName())) {
+                // 実行中のサービスと一致
+                Log.d(TAG, "サービス実行中");
+                found = true;
+                break;
+            }
+        }
+        if (found == false) {
+            Log.d(TAG, "サービス未実行のため、Service起動");
+
+            //サービスの開始
+            Intent intent = new Intent(this, CellIdService.class);
+            startService(intent);
+
+        }
+
+
+
+
+
+
 
     }
 }

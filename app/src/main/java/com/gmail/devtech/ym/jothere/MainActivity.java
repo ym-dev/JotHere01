@@ -38,7 +38,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "JotHereLog";
 
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
-    private Button filterButton;
+
     private EditText categoryEditText;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_PHONE_STATE= 2;
+//    private static final int PERMISSION_REQUEST_PHONE_STATE= 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +114,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRealm.addChangeListener(mRealmListener);
 
 
-
-        //Button
-        filterButton = (Button) findViewById(R.id.button);
-        filterButton.setOnClickListener(this);
-        filterButton.setTag(0);        //Tag0が絞込み実行ボタン
 
 
         // ListViewの設定
@@ -243,50 +238,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRealm.close();
     }
 
-
-    @Override
-    public void onClick(View v) {
-        Log.d("TaskApp", "Buttonが押されました。Tag="+ String.valueOf(filterButton.getTag()));
-
-        categoryEditText = (EditText) findViewById(R.id.filterEditText);
-        SpannableStringBuilder sp = (SpannableStringBuilder)categoryEditText.getText();
-        String inputCategory = sp.toString();
-        Log.d("TaskApp", "categoryTextの中身。"+ inputCategory);
-
-        int buttonTag = (Integer) filterButton.getTag();
-        Log.d("TaskApp", "buttontag = "+ buttonTag);
-
-        if (buttonTag == 0){
-            Log.d("TaskApp", "絞込み選択時の処理"+ buttonTag);
-            // Realmの設定(categoryを絞って)
-            mRealm = Realm.getDefaultInstance();
-            mTaskRealmResults = mRealm.where(Task.class).equalTo("category", inputCategory).findAll();
-            mTaskRealmResults.sort("date", Sort.DESCENDING);
-            mRealm.addChangeListener(mRealmListener);
-            reloadListView();
-
-            filterButton.setTag(1);
-            filterButton.setText("全表示");
-
-        }else if(buttonTag == 1){
-            Log.d("TaskApp", "全表示選択時の処理"+ inputCategory);
-            // Realmの設定
-            mRealm = Realm.getDefaultInstance();
-            mTaskRealmResults = mRealm.where(Task.class).findAll();
-            mTaskRealmResults.sort("date", Sort.DESCENDING);
-            mRealm.addChangeListener(mRealmListener);
-            reloadListView();
-
-            filterButton.setTag(0);
-            filterButton.setText("絞込み");
-
-        }
-
-
-
-
-
-    }
 
 
     private void startMyService() {

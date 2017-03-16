@@ -24,26 +24,6 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight="0.48"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/filterEditText"
-                android:layout_width="280dp"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:hint="カテゴリを入力" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="絞込み" />
-        </LinearLayout>
-
         <ListView
             android:id="@+id/listView1"
             android:layout_width="match_parent"

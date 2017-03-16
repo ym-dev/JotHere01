@@ -157,7 +157,7 @@ public class CellIdService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         builder.setAutoCancel(true);
-        builder.setContentTitle("Cell ID Changed!");
+        builder.setContentTitle("Cell ID Matched!");
         builder.setContentText("i= "+number+" CID="+string);
 //        builder.setSubText(nowText);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);

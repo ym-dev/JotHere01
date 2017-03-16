@@ -35,14 +35,16 @@ public class CellIdService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "CellIdCervice onStartCommandが呼ばれました");
 
-/*        //sendNotifi実験用コード。サービス起動５秒後に発動
+/*
+        //sendNotifi実験用コード。サービス起動５秒後に発動
         try {
             Thread.sleep(5000);
             Integer testId = 111111;
             sendNotification(testId);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
+*/
 
         //電話情報の受信開始
         TelephonyManager telManager=(TelephonyManager)
@@ -66,6 +68,8 @@ public class CellIdService extends Service {
                 GsmCellLocation loc = (GsmCellLocation) location;
                 cellId = loc.getCid();
                 str += "CID:" + loc.getCid() + "\n";
+
+
 
 //                str += "LAC:" + loc.getLac() + "\n";
             }

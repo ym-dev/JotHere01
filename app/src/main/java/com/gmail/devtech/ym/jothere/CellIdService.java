@@ -73,7 +73,7 @@ public class CellIdService extends Service {
             if (location instanceof GsmCellLocation) {
                 GsmCellLocation loc = (GsmCellLocation) location;
                 cellId = loc.getCid();
-                str += "CID:" + loc.getCid() + "\n";
+                str += "phoneStateListenerが呼ばれました CID:" + loc.getCid() + "\n";
 
 
 
@@ -107,15 +107,17 @@ public class CellIdService extends Service {
 
         for (int i = 0; i < cidRealmResults.size(); i++) {
             if (!cidRealmResults.get(i).isValid()) continue;
-            int taskId = cidRealmResults.get(i).getId();
+            int taskIdExtra = cidRealmResults.get(i).getId();
+            String taskTitle = cidRealmResults.get(i).getTitle();
             String taskCid = cidRealmResults.get(i).getCategory();
             int intTaskCid = Integer.parseInt(taskCid);
-            Log.d(TAG, "i= "+i+" Id="+taskId+" taskCid="+taskCid);
+            Log.d(TAG, "i= "+i+" Id="+taskIdExtra+" taskTitle="+taskTitle+" taskCid="+taskCid);
 
 
             if(intTaskCid == cellId){
                 Log.d(TAG, "i= "+i+" cellId Match!!!");
-                sendNotification(cellId, taskId);
+                Log.d(TAG, "sendNotiにCellId"+cellId+" taskIdExtra"+taskIdExtra+" title"+taskTitle+"を送信");
+                sendNotification(cellId, taskIdExtra, taskTitle);
             }else{
                 Log.d(TAG, "i= "+i+" cellId UnMatch");
             }
@@ -142,8 +144,8 @@ public class CellIdService extends Service {
 
     */
 
-    private void sendNotification(Integer cellid, int taskId) {
-        Log.d(TAG, "sendNotification() cellid="+cellid);
+    private void sendNotification(Integer cellid, int taskIdExtra, String title) {
+        Log.d(TAG, "sendNotification()メッソッド cellid="+cellid+" taskIdExtra="+taskIdExtra);
 
         String string = "";
         //Intent intent = new Intent();       //引数なしのIntentを作成。通知をタップしても何もしない。
@@ -152,8 +154,15 @@ public class CellIdService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 */
         Intent intent = new Intent(getApplicationContext(), InputActivity.class);
-        intent.putExtra(EXTRA_TASK, taskId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);//Extra付きのPendinIntentにはこの第４引数が必要
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    //NotifiからtaskIdが正しく設定されない問題の検証用
+//        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);    //NotifiからtaskIdが正しく設定されない問題の検証用
+//        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);    //NotifiからtaskIdが正しく設定されない問題の検証用
+        intent.putExtra(EXTRA_TASK, taskIdExtra);
+        intent.putExtra("FromNotifiFlag", 1);
+
+        //Extra付きのPendinIntentにはこの第４引数が必要　FLAG_IMMUTABLE  FLAG_UPDATE_CURRENT 。第２引数にも要注意。一般的に0となっているが実際は同じだと複数のPendingIndentが上書きされるのでそれぞれ独立した値にする必要あり。
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, taskIdExtra, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         Date now = new Date(System.currentTimeMillis());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.JAPANESE);
         String nowText = formatter.format(now);
@@ -167,20 +176,20 @@ public class CellIdService extends Service {
 
         builder.setAutoCancel(true);
         builder.setContentTitle("Cell ID Matched!");
-        builder.setContentText("taskId= "+taskId+" CID="+string);
+        builder.setContentText(title +" Id="+taskIdExtra+" CID="+string);
 //        builder.setSubText(nowText);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentIntent(pendingIntent);
 //        builder.setDefaults(Notification.DEFAULT_VIBRATE);
         builder.setDefaults(Notification.DEFAULT_ALL);
-        builder.setAutoCancel(false);
+        builder.setAutoCancel(true);
         notification = builder.build();
 
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 
-        manager.notify(0, builder.build());
+        manager.notify(taskIdExtra, builder.build());
     }
 
     @Override

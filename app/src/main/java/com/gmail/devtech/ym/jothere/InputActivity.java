@@ -34,7 +34,6 @@ import android.telephony.PhoneStateListener;
 public class InputActivity extends AppCompatActivity {
 
     public static final String TAG = "JotHereLog";
-    public final static String EXTRA_TASK = "com.gmail.devtech.ym.jothere.TASK";
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Button mDateButton, mTimeButton;
@@ -113,31 +112,13 @@ public class InputActivity extends AppCompatActivity {
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
 
 
-        //Cell IDの取得
-        TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        PSL = new PhoneStateListener();
-        int event = PSL.LISTEN_CELL_INFO | PSL.LISTEN_CELL_LOCATION;
-        TM.listen(PSL, event);
-        GsmCellLocation gsmCellLocation = (GsmCellLocation)TM.getCellLocation();
-
-        if (gsmCellLocation != null) {
-//        Integer cid = gsmCellLocation.getCid() & 0xffff;  //cell id
-            Integer cid = gsmCellLocation.getCid();  //cell id
-            strCellId = cid.toString();
-            mCategoryEdit.setText(strCellId);       //Cell Idをcategory行に記載
-
-            Log.d("jothere", "strCellID= " + strCellId);
-        }else{
-            String cidobterr = (String) getText(R.string.cidobterr);
-            mCategoryEdit.setText(cidobterr);       //Cell Idをcategory行に記載
-        }
-
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();
-        int taskId = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);
-        Log.d(TAG, "Intentで飛んできたtaskId="+taskId);
+        int taskIdExtra = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);
+        int fromNotiFlag = intent.getIntExtra("FromNotifiFlag", -1);
+        Log.d(TAG, "Intentで飛んできたtaskIdExtra="+taskIdExtra+", NotifiFlag="+fromNotiFlag);
         Realm realm = Realm.getDefaultInstance();
-        mTask = realm.where(Task.class).equalTo("id", taskId).findFirst();
+        mTask = realm.where(Task.class).equalTo("id", taskIdExtra).findFirst();
         realm.close();
 //        mTask = (Task) intent.getSerializableExtra(MainActivity.EXTRA_TASK);
 
@@ -167,47 +148,38 @@ public class InputActivity extends AppCompatActivity {
             String timeString = String.format("%02d", mHour) + ":" + String.format("%02d", mMinute);
             mDateButton.setText(dateString);
             mTimeButton.setText(timeString);
+
+
         }
+
+        //Cell IDの取得
+        if(fromNotiFlag != 1) {
+            TM = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+            PSL = new PhoneStateListener();
+            int event = PSL.LISTEN_CELL_INFO | PSL.LISTEN_CELL_LOCATION;
+            TM.listen(PSL, event);
+            GsmCellLocation gsmCellLocation = (GsmCellLocation) TM.getCellLocation();
+
+            if (gsmCellLocation != null) {
+//        Integer cid = gsmCellLocation.getCid() & 0xffff;  //cell id
+                Integer cid = gsmCellLocation.getCid();  //cell id
+                strCellId = cid.toString();
+                mCategoryEdit.setText(strCellId);       //Cell Idをcategory行に記載
+
+                Log.d(TAG, "strCellID= " + strCellId);
+            } else {
+                String cidobterr = (String) getText(R.string.cidobterr);
+                mCategoryEdit.setText(cidobterr);       //Cell Idをcategory行に記載
+            }
+        }else{
+            Log.d(TAG, "Notificationからきたので再度CellId取得はしません");
+        }
+
 
 
 
     }
 
-
-
-/*
-
-    //電話情報を受信するためのリスナー
-    public PhoneStateListener phoneStateListener=new PhoneStateListener() {
-
-        //基地局の変化時に呼ばれる
-        @Override
-        public void onCellLocationChanged(CellLocation location) {
-            String str="";
-            //GSMの基地局情報
-            if (location instanceof GsmCellLocation) {
-                GsmCellLocation loc=(GsmCellLocation)location;
-                Integer cellId = loc.getCid();
-                strCellId = cellId.toString();
-                Log.d("jothere", strCellId);
-//                str+="CID:"+loc.getCid()+"\n";
-//                str+="LAC:"+loc.getLac()+"\n";
-                mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
-                mCategoryEdit.setText(strCellId);
-            }
-            //CDMAの基地局情報
-            else if(location instanceof CdmaCellLocation) {
-                CdmaCellLocation loc=(CdmaCellLocation)location;
-                str+="BaseStationId:"+loc.getBaseStationId()+"\n";
-                str+="BaseStationLatitude:"+loc.getBaseStationLatitude()+"\n";
-                str+="BaseStationLongitude:"+loc.getBaseStationLongitude()+"\n";
-                str+="NetworkId:"+loc.getNetworkId()+"\n";
-                str+="SystemId:"+loc.getSystemId()+"\n";
-            }
-        }
-
-    };
-*/
 
 
     private void addTask() {
@@ -237,7 +209,7 @@ public class InputActivity extends AppCompatActivity {
 
         mTask.setTitle(title);
         mTask.setContents(content);
-        mTask.setCategory(strCellId);
+        mTask.setCategory(strCellId);           //CellIdをRealmに追記
         GregorianCalendar calendar = new GregorianCalendar(mYear,mMonth,mDay,mHour,mMinute);
         Date date = calendar.getTime();
         mTask.setDate(date);

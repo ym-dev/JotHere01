@@ -33,6 +33,9 @@ import android.telephony.PhoneStateListener;
 
 public class InputActivity extends AppCompatActivity {
 
+    public static final String TAG = "JotHereLog";
+    public final static String EXTRA_TASK = "com.gmail.devtech.ym.jothere.TASK";
+
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Button mDateButton, mTimeButton;
     private EditText mTitleEdit, mContentEdit, mCategoryEdit;
@@ -132,6 +135,7 @@ public class InputActivity extends AppCompatActivity {
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();
         int taskId = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);
+        Log.d(TAG, "Intentで飛んできたtaskId="+taskId);
         Realm realm = Realm.getDefaultInstance();
         mTask = realm.where(Task.class).equalTo("id", taskId).findFirst();
         realm.close();

@@ -27,9 +27,12 @@ import io.realm.RealmResults;
 
 public class CellIdService extends Service {
     public static final String TAG = "JotHereLog";
+    public final static String EXTRA_TASK = "com.gmail.devtech.ym.jothere.TASK";
+
     public Integer cellId;
     public TelephonyManager TM;
     private Task mTaskService;
+
 
     public CellIdService() {
 
@@ -104,16 +107,17 @@ public class CellIdService extends Service {
 
         for (int i = 0; i < cidRealmResults.size(); i++) {
             if (!cidRealmResults.get(i).isValid()) continue;
+            int taskId = cidRealmResults.get(i).getId();
             String taskCid = cidRealmResults.get(i).getCategory();
             int intTaskCid = Integer.parseInt(taskCid);
-            Log.d(TAG, "i= "+i+" taskCid="+taskCid);
+            Log.d(TAG, "i= "+i+" Id="+taskId+" taskCid="+taskCid);
 
 
             if(intTaskCid == cellId){
-                Log.d(TAG, "i="+i+"cellId Match!");
-                sendNotification(cellId, i);
+                Log.d(TAG, "i= "+i+" cellId Match!!!");
+                sendNotification(cellId, taskId);
             }else{
-                Log.d(TAG, "i="+i+"cellId UnMatch");
+                Log.d(TAG, "i= "+i+" cellId UnMatch");
             }
 
 
@@ -138,13 +142,18 @@ public class CellIdService extends Service {
 
     */
 
-    private void sendNotification(Integer cellid, int number) {
+    private void sendNotification(Integer cellid, int taskId) {
         Log.d(TAG, "sendNotification() cellid="+cellid);
 
         String string = "";
         //Intent intent = new Intent();       //引数なしのIntentを作成。通知をタップしても何もしない。
+/*
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+*/
+        Intent intent = new Intent(getApplicationContext(), InputActivity.class);
+        intent.putExtra(EXTRA_TASK, taskId);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);//Extra付きのPendinIntentにはこの第４引数が必要
         Date now = new Date(System.currentTimeMillis());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.JAPANESE);
         String nowText = formatter.format(now);
@@ -158,7 +167,7 @@ public class CellIdService extends Service {
 
         builder.setAutoCancel(true);
         builder.setContentTitle("Cell ID Matched!");
-        builder.setContentText("i= "+number+" CID="+string);
+        builder.setContentText("taskId= "+taskId+" CID="+string);
 //        builder.setSubText(nowText);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -171,7 +180,7 @@ public class CellIdService extends Service {
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 
-        manager.notify(number, builder.build());
+        manager.notify(0, builder.build());
     }
 
     @Override

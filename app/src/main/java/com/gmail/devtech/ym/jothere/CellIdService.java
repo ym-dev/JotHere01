@@ -110,16 +110,18 @@ public class CellIdService extends Service {
             int taskIdExtra = cidRealmResults.get(i).getId();
             String taskTitle = cidRealmResults.get(i).getTitle();
             String taskCid = cidRealmResults.get(i).getCategory();
-            int intTaskCid = Integer.parseInt(taskCid);
-            Log.d(TAG, "i= "+i+" Id="+taskIdExtra+" taskTitle="+taskTitle+" taskCid="+taskCid);
+            if(taskCid != null) {
+                int intTaskCid = Integer.parseInt(taskCid);
+                Log.d(TAG, "i= " + i + " Id=" + taskIdExtra + " taskTitle=" + taskTitle + " taskCid=" + taskCid);
 
 
-            if(intTaskCid == cellId){
-                Log.d(TAG, "i= "+i+" cellId Match!!!");
-                Log.d(TAG, "sendNotiにCellId"+cellId+" taskIdExtra"+taskIdExtra+" title"+taskTitle+"を送信");
-                sendNotification(cellId, taskIdExtra, taskTitle);
-            }else{
-                Log.d(TAG, "i= "+i+" cellId UnMatch");
+                if (intTaskCid == cellId) {
+                    Log.d(TAG, "i= " + i + " cellId Match!!!");
+                    Log.d(TAG, "sendNotiにCellId" + cellId + " taskIdExtra" + taskIdExtra + " title" + taskTitle + "を送信");
+                    sendNotification(cellId, taskIdExtra, taskTitle);
+                } else {
+                    Log.d(TAG, "i= " + i + " cellId UnMatch");
+                }
             }
 
 

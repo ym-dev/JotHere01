@@ -180,12 +180,17 @@ public class CellIdService extends Service {
         builder.setContentTitle("Cell ID Matched!");
         builder.setContentText(title +" Id="+taskIdExtra+" CID="+string);
 //        builder.setSubText(nowText);
-        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentIntent(pendingIntent);
 //        builder.setDefaults(Notification.DEFAULT_VIBRATE);
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setAutoCancel(true);
+
+//        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+
+
+
         notification = builder.build();
 
         notification.flags |= Notification.FLAG_ONGOING_EVENT;

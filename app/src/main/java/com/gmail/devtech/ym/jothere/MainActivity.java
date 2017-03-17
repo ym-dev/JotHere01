@@ -213,6 +213,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void reloadListView() {
 
+        //mTaskRealmResultsを最新の状態に更新する
+        mTaskRealmResults = mRealm.where(Task.class).findAll();
+        mTaskRealmResults.sort("date", Sort.DESCENDING);
+
         ArrayList<Task> taskArrayList = new ArrayList<>();
 
         for (int i = 0; i < mTaskRealmResults.size(); i++) {

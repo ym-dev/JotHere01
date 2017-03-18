@@ -18,17 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_title" />
-    <EditText
-        android:id="@+id/category_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title_edit_text"
-        android:hint="Cell ID" />
+
     <EditText
         android:id="@+id/content_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/category_edit_text"
+        android:layout_below="@id/title_edit_text"
         android:hint="@string/hint_contents" />
     <Button
         android:id="@+id/date_button"
@@ -54,5 +49,37 @@
         android:layout_below="@id/times_button"
         android:layout_alignParentRight="true"
         android:text="@string/but_done" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/done_button"
+        android:layout_alignParentRight="true" >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CID:"
+            android:textColor="#CBD4E1"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/category_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:selectAllOnFocus="false"
+            android:textAlignment="textEnd"
+            android:textColor="#CBD4E1"
+            android:textStyle="italic" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </RelativeLayout>

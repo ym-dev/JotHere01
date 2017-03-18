@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
@@ -37,7 +38,8 @@ public class InputActivity extends AppCompatActivity {
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Button mDateButton, mTimeButton;
-    private EditText mTitleEdit, mContentEdit, mCategoryEdit;
+    private EditText mTitleEdit, mContentEdit;
+    private TextView mCategoryEdit;
     private Task mTask;
     private String strCellId;
     public TelephonyManager TM;
@@ -109,7 +111,7 @@ public class InputActivity extends AppCompatActivity {
         findViewById(R.id.done_button).setOnClickListener(mOnDoneClickListener);
         mTitleEdit = (EditText)findViewById(R.id.title_edit_text);
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
-        mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);
+        mCategoryEdit = (TextView)findViewById(R.id.category_edit_text);
 
 
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する

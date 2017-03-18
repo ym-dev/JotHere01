@@ -17,6 +17,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,12 +37,12 @@ import io.realm.RealmResults;
 
 import android.telephony.PhoneStateListener;
 
-public class InputActivity extends AppCompatActivity {
+public class InputActivity extends AppCompatActivity implements TextWatcher {
 
     public static final String TAG = "JotHereLog";
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Button mDateButton, mTimeButton;
+    private Button mDateButton, mTimeButton, mDoneButton, mDelButton;
     private EditText mTitleEdit, mContentEdit;
     private TextView mCategoryEdit;
     private Task mTask;
@@ -126,12 +128,18 @@ public class InputActivity extends AppCompatActivity {
         mDateButton.setOnClickListener(mOnDateClickListener);
         mTimeButton = (Button)findViewById(R.id.times_button);
         mTimeButton.setOnClickListener(mOnTimeClickListener);
-        findViewById(R.id.done_button).setOnClickListener(mOnDoneClickListener);
-        findViewById(R.id.del_button).setOnClickListener(mOnDelClickListener);
+        mDoneButton =(Button)findViewById(R.id.done_button);
+        mDelButton =(Button)findViewById(R.id.del_button);
+        mDoneButton.setOnClickListener(mOnDoneClickListener);
+        mDelButton.setOnClickListener(mOnDelClickListener);
 
         mTitleEdit = (EditText)findViewById(R.id.title_edit_text);
+        mTitleEdit.addTextChangedListener(this);   //Title蘭の記入を監視
+
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (TextView)findViewById(R.id.category_edit_text);
+
+
 
 
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
@@ -152,6 +160,9 @@ public class InputActivity extends AppCompatActivity {
             mDay = calendar.get(Calendar.DAY_OF_MONTH);
             mHour = calendar.get(Calendar.HOUR_OF_DAY);
             mMinute = calendar.get(Calendar.MINUTE);
+
+            mDelButton.setEnabled(false);  //新規作成時はDelボタンを無効に
+
         } else {
             // 更新の場合
             mTitleEdit.setText(mTask.getTitle());
@@ -173,6 +184,18 @@ public class InputActivity extends AppCompatActivity {
 
 
         }
+
+        //DoneボタンとDelボタンの有効無効チェック
+        //Titleが０文字だったら無効に(Titleの入力監視はafterTextChangedで実装)
+        if(mTitleEdit.length() == 0) {
+            Log.d(TAG, "タイトルが未記入です");
+            mDoneButton.setEnabled(false);
+        }else{
+            Log.d(TAG, "タイトル記入済みです");
+            mDoneButton.setEnabled(true);
+        }
+
+
 
         //Cell IDの取得
         if(fromNotiFlag != 1) {
@@ -302,6 +325,34 @@ public class InputActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
+
+
+    }
+
+
+    //implementsしたTextWatcherの処理
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+        //操作前のEtidTextの状態を取得する
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        //操作中のEtidTextの状態を取得する
+
+    }
+    @Override
+    public void afterTextChanged(Editable s) {
+        //操作後のEtidTextの状態を取得する
+        if(mTitleEdit.length() != 0) {
+            Log.d(TAG, "afterTextChangedタイトルが入力されました");
+            mDoneButton.setEnabled(true);
+        }else{
+            Log.d(TAG, "afterTextChangedタイトルが未記入になりました");
+            mDoneButton.setEnabled(false);
+        }
 
 
 

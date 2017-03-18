@@ -25,6 +25,7 @@ import java.util.Locale;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+
 public class CellIdService extends Service {
     public static final String TAG = "JotHereLog";
     public final static String EXTRA_TASK = "com.gmail.devtech.ym.jothere.TASK";
@@ -40,7 +41,7 @@ public class CellIdService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "CellIdCervice onStartCommandが呼ばれました");
+        Log.d(TAG, "CellIdService onStartCommandが呼ばれました");
 
 /*
         //sendNotifi実験用コード。サービス起動５秒後に発動
@@ -177,8 +178,10 @@ public class CellIdService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         builder.setAutoCancel(true);
-        builder.setContentTitle("Cell ID Matched!");
-        builder.setContentText(title +" Id="+taskIdExtra+" CID="+string);
+//        builder.setContentTitle("Cell ID Matched!");
+        String strNotiTitle = (String) getText(R.string.noti_title);
+        builder.setContentTitle(strNotiTitle);     //通知タイトル
+        builder.setContentText(title);             //通知内容(タスクタイトルを表示)
 //        builder.setSubText(nowText);
 //        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentIntent(pendingIntent);

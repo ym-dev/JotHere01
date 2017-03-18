@@ -196,8 +196,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         Log.d(TAG, "MainActivity onResume");
         super.onResume();
-        //バージョン(パーミッション)を確認してサービスの起動
 
+        //Input Activityが削除してfinishしたときのために更新
+        reloadListView();
+
+        //バージョン(パーミッション)を確認してサービスの起動
         //位置情報の許諾をみてサービスをスタート
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.d(TAG, "OSVersionがM以上");

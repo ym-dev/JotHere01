@@ -6,8 +6,10 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.CellLocation;
@@ -30,6 +32,7 @@ import java.util.GregorianCalendar;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+
 import android.telephony.PhoneStateListener;
 
 public class InputActivity extends AppCompatActivity {
@@ -45,6 +48,7 @@ public class InputActivity extends AppCompatActivity {
     public TelephonyManager TM;
     private PhoneStateListener PSL;
     private int event;
+    private Realm mRealm;
 
 
 
@@ -83,6 +87,8 @@ public class InputActivity extends AppCompatActivity {
         }
     };
 
+
+    //Registerボタン選択時処理
     private View.OnClickListener mOnDoneClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -90,6 +96,18 @@ public class InputActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    //Deleteボタン選択時処理
+    private View.OnClickListener mOnDelClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            delTask();
+
+        }
+    };
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +127,8 @@ public class InputActivity extends AppCompatActivity {
         mTimeButton = (Button)findViewById(R.id.times_button);
         mTimeButton.setOnClickListener(mOnTimeClickListener);
         findViewById(R.id.done_button).setOnClickListener(mOnDoneClickListener);
+        findViewById(R.id.del_button).setOnClickListener(mOnDelClickListener);
+
         mTitleEdit = (EditText)findViewById(R.id.title_edit_text);
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (TextView)findViewById(R.id.category_edit_text);
@@ -233,6 +253,57 @@ public class InputActivity extends AppCompatActivity {
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), resultPendingIntent);
+
+    }
+
+
+    private void delTask() {
+        Log.d(TAG, "delボタンが押されました");
+        // タスクを削除する
+
+        // ダイアログを表示する
+        AlertDialog.Builder builder = new AlertDialog.Builder(InputActivity.this);
+        String strDelNotiTitle = (String) getText(R.string.del_noti_title);
+        String strDelNotiMsg = (String) getText(R.string.del_noti_body);
+
+        builder.setTitle(strDelNotiTitle);
+        builder.setMessage("["+mTask.getTitle()+"] "+ strDelNotiMsg);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mRealm = Realm.getDefaultInstance();
+
+                RealmResults<Task> results = mRealm.where(Task.class).equalTo("id", mTask.getId()).findAll();
+
+
+
+                Intent resultIntent = new Intent(getApplicationContext(), TaskAlarmReceiver.class);
+                PendingIntent resultPendingIntent = PendingIntent.getBroadcast(
+                        getApplicationContext(),
+                        mTask.getId(),
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.cancel(resultPendingIntent);
+
+                mRealm.beginTransaction();
+                results.deleteAllFromRealm();
+                mRealm.commitTransaction();
+
+
+                finish();
+
+
+            }
+        });
+        builder.setNegativeButton("CANCEL", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
 
     }
 }

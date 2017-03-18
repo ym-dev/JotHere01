@@ -11,5 +11,6 @@
     <string name="hint_title">Title</string>
     <string name="hint_contents">Contents</string>
     <string name="but_done">Register</string>
+    <string name="but_del">Delete</string>
 
 </resources>

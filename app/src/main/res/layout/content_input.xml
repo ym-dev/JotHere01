@@ -42,14 +42,24 @@
         android:layout_alignParentRight="true"
         android:text="--:--"
         style="@style/Widget.AppCompat.Button.Borderless" />
+
+
     <Button
         android:id="@+id/done_button"
-        android:layout_width="96dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/times_button"
+
+        android:layout_toLeftOf="@+id/times_button"
+        android:text="@string/but_done" />
+
+    <Button
+        android:id="@+id/del_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/times_button"
         android:layout_alignParentRight="true"
-        android:text="@string/but_done" />
-
+        android:text="@string/but_del" />
 
     <LinearLayout
         android:layout_width="wrap_content"

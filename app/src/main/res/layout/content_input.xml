@@ -17,7 +17,7 @@
         android:id="@+id/title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="タイトル" />
+        android:hint="@string/hint_title" />
     <EditText
         android:id="@+id/category_edit_text"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/category_edit_text"
-        android:hint="内容" />
+        android:hint="@string/hint_contents" />
     <Button
         android:id="@+id/date_button"
         android:layout_width="0dp"
@@ -53,6 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/times_button"
         android:layout_alignParentRight="true"
-        android:text="決定" />
+        android:text="@string/but_done" />
 
 </RelativeLayout>

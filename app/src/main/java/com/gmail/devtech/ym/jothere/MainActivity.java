@@ -145,9 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
                 // ダイアログを表示する
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                String strDelNotiTitle = (String) getText(R.string.del_noti_title);
+                String strDelNotiMsg = (String) getText(R.string.del_noti_body);
 
-                builder.setTitle("削除");
-                builder.setMessage(task.getTitle() + "を削除しますか");
+                builder.setTitle(strDelNotiTitle);
+                builder.setMessage("["+task.getTitle()+"] "+ strDelNotiMsg);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

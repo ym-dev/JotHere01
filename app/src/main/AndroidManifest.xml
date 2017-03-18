@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".InputActivity"
-            android:label="タスク"
+            android:label="@string/app_input_act"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

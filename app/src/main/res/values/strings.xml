@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">Jot Here!</string>
+    <string name="app_input_act">Memo</string>
+
     <string name="action_settings">Settings</string>
-    <string name="cidobterr">Cannot obtain Cell ID</string>
+    <string name="cid_obt_err">Cannot obtain Cell ID</string>
+    <string name="noti_title">Return around registered point</string>
+    <string name="del_noti_title">Delete</string>
+    <string name="del_noti_body">is deleted. Are you sure?</string>
+
+    <string name="hint_title">Title</string>
+    <string name="hint_contents">Contents</string>
+    <string name="but_done">Register</string>
 
 </resources>

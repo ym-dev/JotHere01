@@ -168,8 +168,8 @@ public class InputActivity extends AppCompatActivity {
 
                 Log.d(TAG, "strCellID= " + strCellId);
             } else {
-                String cidobterr = (String) getText(R.string.cidobterr);
-                mCategoryEdit.setText(cidobterr);       //Cell Idをcategory行に記載
+                String cidobterr = (String) getText(R.string.cid_obt_err);
+                mCategoryEdit.setText(cidobterr);       //Cell Idが取れない旨をcategory行に記載
             }
         }else{
             Log.d(TAG, "Notificationからきたので再度CellId取得はしません");

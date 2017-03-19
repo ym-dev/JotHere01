@@ -295,7 +295,6 @@ public class InputActivity extends AppCompatActivity implements TextWatcher {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mRealm = Realm.getDefaultInstance();
-
                 RealmResults<Task> results = mRealm.where(Task.class).equalTo("id", mTask.getId()).findAll();
 
 
@@ -314,7 +313,7 @@ public class InputActivity extends AppCompatActivity implements TextWatcher {
                 mRealm.beginTransaction();
                 results.deleteAllFromRealm();
                 mRealm.commitTransaction();
-
+                mRealm.close();
 
                 finish();
 

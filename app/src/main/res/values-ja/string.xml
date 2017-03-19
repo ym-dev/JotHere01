@@ -3,7 +3,7 @@
     <string name="app_input_act">メモ内容</string>
 
     <string name="action_settings">設定</string>
-    <string name="cidobterr">Cell IDが取得できません</string>
+    <string name="cid_obt_err">Cell IDが取得できません</string>
     <string name="noti_title">登録ポイント周辺に戻りました</string>
     <string name="del_noti_title">削除</string>
     <string name="del_noti_body">を削除しますか？</string>

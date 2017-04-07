@@ -36,14 +36,14 @@ public class CellIdService extends Service {
 
 
     //test2
-    
+
     public CellIdService() {
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "CellIdService onStartCommandが呼ばれました");
+        Log.d(TAG, "CellIdService onStartCommandが呼ばれました!");
 
 /*
         //sendNotifi実験用コード。サービス起動５秒後に発動
